@@ -1,0 +1,14 @@
+{
+  "extensionId": "dshwb-sync",
+  "version": "2.0.1",
+  "kind": "user",
+  "grantedPermissions": [
+    "*"
+  ],
+  "processPolicy": {
+    "server": "fork",
+    "renderer": "mf"
+  },
+  "status": "active",
+  "resident": true
+}
