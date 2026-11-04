@@ -20,9 +20,65 @@
 
 ## 安装
 
-1. 下载本仓库，得到一个 `dshwb-sync` 目录
-2. 在 WorkBuddy 里打开扩展目录，把整个目录放进去
-3. 重启 WorkBuddy
+### 第一步：找到 WorkBuddy 的安装目录
+
+WorkBuddy 装在哪里因人而异，常见的两种：
+
+```
+C:\Users\<你的用户名>\AppData\Local\Programs\WorkBuddy
+D:\Program Files\WorkBuddy
+E:\AITools\WorkBuddy
+```
+
+不确定的话，用这两种办法找：
+
+- **任务管理器** → 找到 `WorkBuddy` 进程 → 右键 → **打开文件所在的位置**
+- 或右键桌面上的 WorkBuddy 快捷方式 → **打开文件所在的位置**
+
+下面把安装目录记作 `<WorkBuddy 安装目录>`。
+
+### 第二步：把 `dshwb-sync` 目录放进扩展目录
+
+扩展目录的完整路径是：
+
+```
+<WorkBuddy 安装目录>\resources\app.asar.unpacked\resources\extensions\dshwb-sync\
+```
+
+举例，如果你的 WorkBuddy 装在 `E:\AITools\WorkBuddy`，那就放成：
+
+```
+E:\AITools\WorkBuddy\resources\app.asar.unpacked\resources\extensions\dshwb-sync\
+```
+
+放好后目录长这样（`extension.json` 必须直接在 `dshwb-sync\` 下面一层）：
+
+```
+...\extensions\dshwb-sync\
+    extension.json          ← 清单，必须有
+    distribution.json       ← 权限/进程策略声明，必须有
+    assets\icon.svg
+    server\index.cjs         ← 服务端半边
+    server\lib\...
+    ui\assets\remoteEntry.js ← 界面半边
+```
+
+> 那个 `resources\app.asar.unpacked\resources\extensions\` 目录里本来就有一批
+> WorkBuddy 自带扩展（`edge-sync`、`global-search`、`library` 等），
+> 结构和你放的这份一样，可以对照着看。
+
+### 第三步：完全退出并重启 WorkBuddy
+
+**注意**：要**彻底退出**——包括右下角托盘图标也要退出（任务管理器里确认没有 `WorkBuddy` 进程），
+然后重新打开。只关窗口不算重启，扩展不会重新加载。
+
+### 如果没生效
+
+1. 确认路径里没有多套一层，比如
+   `...\extensions\dshwb-sync\dshwb-sync\extension.json` 就是错的
+2. 确认 `extension.json` 第一行的 `"id"` 是 `dshwb-sync`
+3. 看 WorkBuddy 的日志：`<WorkBuddy 安装目录>\debug.log` 或 `%USERPROFILE%\.workbuddy\logs\`
+4. Windows 上如果往 `Program Files` 里复制提示没权限，用管理员身份打开资源管理器再复制
 
 扩展由两部分组成，`extension.json` 声明了它们：
 
