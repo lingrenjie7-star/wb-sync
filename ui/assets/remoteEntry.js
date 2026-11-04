@@ -1725,9 +1725,19 @@ function dshwbCreatePanel({ React, call }) {
             ),
           ),
           h('div', { className: 'dshwb-card-body' },
-            ...installed.map((s) => {
+            /**
+             * 这里必须遍历**全部** sources，不能只遍历 installed。
+             *
+             * 真实故障：软件装在非默认目录时（比如 DSH 数据在 D:\dsh 而不是 ~/.dsh），
+             * detect() 判定「没安装」→ 不在 installed 里 → 这一行不显示 →
+             * 用户没有任何地方能把这个路径改过来，DSH 功能就永久用不了。
+             *
+             * 所以未检测到的也要列出来，并明确提示「没找到，手动指定」。
+             */
+            ...sources.map((s) => {
               const root = config.workspaceRoot?.[s.id] ?? '';
               const home = config.softwareHome?.[s.id] ?? '';
+              const detected = Boolean(s.installed);
               return h('div', { key: s.id, className: 'dshwb-path-row' },
                 h('div', { className: 'dshwb-path-head' },
                   h('span', null, s.icon ?? '▣'),
@@ -1735,7 +1745,16 @@ function dshwbCreatePanel({ React, call }) {
                   s.tier?.containerLabel && !s.generic
                     ? h('span', { className: 'dshwb-pill' }, s.tier.containerLabel)
                     : null,
+                  detected
+                    ? null
+                    : h('span', { className: 'dshwb-pill warn', title: s.detail ?? '' }, '未检测到'),
                 ),
+                detected
+                  ? null
+                  : h('div', { className: 'dshwb-hint' },
+                      `没在默认位置找到 ${s.label} 的数据目录`
+                      + (home ? `（当前配置：${home}）` : '')
+                      + '。如果它装在别处，用下面「数据目录」选一下真实位置即可。'),
                 // 工作区根目录（结构化软件才有）
                 s.generic ? null : h('div', { className: 'dshwb-path-entry' },
                   h('span', { className: 'dshwb-path-kind' }, '工作区根目录'),
