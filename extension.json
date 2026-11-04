@@ -1,7 +1,7 @@
 {
   "id": "dshwb-sync",
   "name": "跨电脑同步",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "在两台电脑之间接续 DSH 与 WorkBuddy 的工作：逐项勾选工作区/对话，传到你自己的私有 GitHub 仓库。",
 
   "ui": {
